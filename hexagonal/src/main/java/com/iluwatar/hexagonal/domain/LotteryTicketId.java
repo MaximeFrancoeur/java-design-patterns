@@ -1,6 +1,6 @@
-/**
+/*
  * The MIT License
- * Copyright (c) 2014 Ilkka Seppälä
+ * Copyright © 2014-2019 Ilkka Seppälä
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,22 +20,52 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package com.iluwatar.hexagonal.domain;
 
-import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Lottery ticked id
+ * Lottery ticked id.
  */
 public class LotteryTicketId {
-  
-  private final UUID id;
-  
+
+  private static final AtomicInteger numAllocated = new AtomicInteger(0);
+  private final int id;
+
   public LotteryTicketId() {
-    id = UUID.randomUUID();
+    this.id = numAllocated.incrementAndGet();
   }
-  
-  public UUID getId() {
+
+  public LotteryTicketId(int id) {
+    this.id = id;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  @Override
+  public String toString() {
+    return String.format("%d", id);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    var that = (LotteryTicketId) o;
+
+    return id == that.id;
+  }
+
+  @Override
+  public int hashCode() {
     return id;
   }
 }
